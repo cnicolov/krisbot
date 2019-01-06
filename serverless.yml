@@ -21,6 +21,7 @@ frameworkVersion: ">=1.28.0 <2.0.0"
 provider:
   name: aws
   runtime: go1.x
+  role: ssmRole
 
 # you can define service wide environment variables here
 #  environment:
@@ -36,9 +37,9 @@ functions:
   pagerduty-schedule:
     handler: bin/pagerduty-reminder
     events:
-      - schedule: 'cron(0 15 ? * MON-FRI *)'
+      - schedule: 'cron(15 16 ? * MON-FRI *)'
 
-sources:
+resources:
   Resources:
     ssmRole:
       Type: AWS::IAM::Role
@@ -46,7 +47,6 @@ sources:
         Path: /
         RoleName: KrisbotSSMRole
         AssumeRolePolicyDocument:
-          Version: '2017'
           Statement:
             - Effect: Allow
               Principal:
@@ -56,7 +56,6 @@ sources:
         Policies:
           - PolicyName: KrisbotSSMPolicy
             PolicyDocument:
-              Version: '2017'
               Statement:
                 - Effect: Allow
                   Action:
